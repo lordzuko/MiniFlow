@@ -14,3 +14,7 @@ class Input(Node):
         #
         # Example:
         # val0 = self.inbound_nodes[0].value
+        def forward(self, value=None):
+            # Overwrite the value if one is passed in
+            if value is not None:
+                self.value = value
