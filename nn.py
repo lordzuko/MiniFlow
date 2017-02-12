@@ -1,25 +1,44 @@
 """
-This script builds and runs a graph with miniflow.
+Test your network here!
 
-There is no need to change anything to solve this quiz!
+No need to change this code, but feel free to tweak it
+to test your network!
 
-However, feel free to play with the network! Can you also
-build a network that solves the equation below?
-
-(x + y) + y
+Make your changes to backward method of the Sigmoid class in miniflow.py
 """
 
+import numpy as np
 from miniflow import *
 
-x, y = Input(), Input()
+X, W, b = Input(), Input(), Input()
+y = Input()
+f = Linear(X, W, b)
+a = Sigmoid(f)
+cost = MSE(y, a)
 
-f = Add(x, y)
+X_ = np.array([[-1., -2.], [-1, -2]])
+W_ = np.array([[2.], [3.]])
+b_ = np.array([-3.])
+y_ = np.array([1, 2])
 
-feed_dict = {x: 10, y: 5}
+feed_dict = {
+    X: X_,
+    y: y_,
+    W: W_,
+    b: b_,
+}
 
-sorted_nodes = topological_sort(feed_dict)
-output = forward_pass(f, sorted_nodes)
+graph = topological_sort(feed_dict)
+forward_and_backward(graph)
+# return the gradients for each Input
+gradients = [t.gradients[t] for t in [X, y, W, b]]
 
-# NOTE: because topological_sort set the values for the `Input` nodes we could also access
-# the value for x with x.value (same goes for y).
-print("{} + {} = {} (according to miniflow)".format(feed_dict[x], feed_dict[y], output))
+"""
+Expected output
+
+[array([[ -3.34017280e-05,  -5.01025919e-05],
+       [ -6.68040138e-05,  -1.00206021e-04]]), array([[ 0.9999833],
+       [ 1.9999833]]), array([[  5.01028709e-05],
+       [  1.00205742e-04]]), array([ -5.01028709e-05])]
+"""
+print(gradients)
